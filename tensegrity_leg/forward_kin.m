@@ -1,6 +1,6 @@
-function [p,x] = forward_kin(x0,l,k)
+function [p,x] = forward_kin(x0,l,k,robot)
 
-    [x,fval] = fmincon(@(x)energy_con(x,l,k),x0,[],[],[],[],[],[],@confuneq);
+    [x,fval] = fmincon(@(x)energy_leg(x,robot),x0,[],[],[],[],[],[],@(x)rod_constr(x,robot));
 
     p = [x(25)
         x(26)

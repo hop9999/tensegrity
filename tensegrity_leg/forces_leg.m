@@ -2,16 +2,9 @@ clc
 clear all
 close all
 
+a1 = 0.1;
+a3 = 0.05;
 l1 = 0.1;
-l2 = 0.2;
-s = 0.05;
-f = 0.4;
-d = 0.05;
-for a1 = 0.05:d:0.3
-    for a2 = s:s:s
-        for a3 = 0.05:d:0.2
-            for a4 = s:s:s
-                l1 = 0.1;
 l2 = 0.2;
 
 robot.l = [0.1,0.1,a3,0.1,...%1-4
@@ -60,8 +53,8 @@ robot.base_2_2 = [0.2,0.2,0]';
 
 [p,x] = forward_kin_tensegrity(@energy_leg,robot);
 visualize(p,x,robot)
-                drawnow
-            end
-        end
-    end
-end
+
+robot.f = [0;10;0]*1;
+[p,x] = forward_kin_tensegrity(@energy_leg,robot);
+visualize(p,x,robot)
+

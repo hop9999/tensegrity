@@ -3,7 +3,7 @@ clear all
 close all
 
 a1 = 0.1;
-a3 = 0.1;
+a3 = 0.05;
 l1 = 0.1;
 l2 = 0.2;
 
@@ -51,40 +51,16 @@ robot.base_1_2 = [0,0.2,0]';
 robot.base_2_1 = [0.2,0,0]';
 robot.base_2_2 = [0.2,0.2,0]';
 
-dp = linspace(0,2*pi,41);
-dx = 0.05*sin(dp);
-dy = 0.05*cos(2*dp);
-dz = 0.05*cos(dp);
-fig = figure;
-campos([-1,-1,1])
-h = animatedline;
-m = [1,1,1,1,1,1]*3;
-[p0,x2] = forward_kin_tensegrity(@energy_leg,robot);
-robot.x0 = x2;
-filename = 'testAnimated.gif';
-plot3([0,0],[0,0],[0,0]);
-for k = 1:length(dp)
-    p_task_2 = p0 + [dx(k)
-        dy(k)
-        dz(k)];
+[p,x] = forward_kin_tensegrity(@energy_leg,robot);
+robot.x0 = x;
+visualize(p,x,robot)
 
-    robot = inv_kin_tensegrity(p_task_2,@energy_leg,robot);
-    robot.x0 = x2;
-    [p,x2] = forward_kin_tensegrity(@energy_leg,robot);
-    addpoints(h,p_task_2(1),p_task_2(2),p_task_2(3));
-    plot3(p0(1) + dx, p0(2) + dy, p0(3) + dz);
-    visualize(p,x2,robot)
-    drawnow
-    % Capture the plot as an image 
-      frame = getframe(fig); 
-      im = frame2im(frame); 
-      [imind,cm] = rgb2ind(im,256); 
-      % Write to the GIF File 
-      if k == 1 
-          imwrite(imind,cm,filename,'gif', 'Loopcount',inf); 
-      else 
-          imwrite(imind,cm,filename,'gif','WriteMode','append'); 
-      end 
-    hold off;
-    plot3([0,0],[0,0],[0,0]);
-end
+p_task_2 = p + [0.05
+    0.05
+    -0.05];
+robot = inv_kin_tensegrity(p_task_2,@energy_leg,robot);
+[p,x] = forward_kin_tensegrity(@energy_leg,robot);
+visualize(p,x,robot)
+
+
+

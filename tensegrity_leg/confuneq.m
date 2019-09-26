@@ -1,7 +1,7 @@
 function [c,ceq] = confuneq(x)
 n = length(x)/6;
-d1 = 0.5;
-d2 = 0.2;
+d1 = 0.8;
+d2 = 0.4;
 d = [d2,d2,d2,d2,d1,d1,d1];
 c = [];
 ceq = zeros(1,n);

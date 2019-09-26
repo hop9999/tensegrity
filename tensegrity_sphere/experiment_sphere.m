@@ -2,11 +2,24 @@ clc
 clear all
 close all
 
-l2 = ones(1,24)*0.2;
-x0 = [0.3,-0.5,0.3,0,1,0,...
+d1 = 1;
+d2 = 0.2;
+robot.k = ones(1,24)*100;
+robot.d = [d1,d1,d1,d1,d1,d1];
+robot.l = ones(1,24)*0.2;
+robot.x0 = [0.3,-0.5,0.3,0,1,0,...
     0.3,-0.5,0.6,0,1,0,...
     -0.3,0.3,0.5,1,0,0,...
     -0.3,-0.3,0.5,1,0,0];
+robot.m = [1,1,1,1,1,1]*0;
+robot.f = [0;0;10]*0;
+robot.active_springs = [10,12,19,23];
+robot.end_eff.rod = 4;
+robot.end_eff.end = 1;
+robot.base_1_1 = [0,0,0]';
+robot.base_1_2 = [0,0,1]';
+robot.base_2_1 = [0.4,0,0]';
+robot.base_2_2 = [0.4,0,1]';
 
 dp = linspace(0,2*pi,41);
 dx = 0.1*sin(dp);
@@ -16,30 +29,18 @@ fig = figure;
 campos([-1,-1,1])
 h = animatedline;
 m = [1,1,1,1,1,1]*3;
-[p0,x2] = forward_kin(x0,l2,m);
+[p0,x2] = forward_kin_tensegrity(@energy_sphere,robot);
 filename = 'testAnimated.gif';
 plot3([0,0],[0,0],[0,0]);
 for k = 1:length(dp)
-    hold on;
-    xlim([-1 1])
-    ylim([-1 0.5])
-    zlim([0 1])
-    campos('manual')
-    campos([-1,-1,1])
     p_task_2 = p0 + [dx(k)
         dy(k)
         dz(k)];
-    [l2,x2] = inverse_kin(p_task_2,l2,x2,m);
-    [p,x2] = forward_kin(x2,l2,m);
+    robot = inv_kin_tensegrity(p_task_2,@energy_sphere,robot);
+    [p,x2] = forward_kin_tensegrity(@energy_sphere,robot);
     addpoints(h,p_task_2(1),p_task_2(2),p_task_2(3));
     plot3(p0(1) + dx, p0(2) + dy, p0(3) + dz);
-    plot3([0,0],[0,0],[0,1]);
-    plot3([0.4,0.4],[0,0],[0,1]);
-    for i = 1:4
-        plot3([x2((i-1)*6 + 1),x2((i-1)*6 + 1) + x2((i-1)*6 + 4)],...
-            [x2((i-1)*6 + 2),x2((i-1)*6 + 2) + x2((i-1)*6 + 5)],...
-            [x2((i-1)*6 + 3),x2((i-1)*6 + 3) + x2((i-1)*6 + 6)]);
-    end
+    visualize(p,x2,robot)
     drawnow
     % Capture the plot as an image 
       frame = getframe(fig); 
