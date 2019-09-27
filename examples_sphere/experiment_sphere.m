@@ -21,6 +21,8 @@ robot.base_1_2 = [0,0,1]';
 robot.base_2_1 = [0.4,0,0]';
 robot.base_2_2 = [0.4,0,1]';
 
+robot.energy_f = @energy_sphere;
+
 dp = linspace(0,2*pi,41);
 dx = 0.1*sin(dp);
 dy = 0.1*cos(2*dp);
@@ -29,15 +31,15 @@ fig = figure;
 campos([-1,-1,1])
 h = animatedline;
 m = [1,1,1,1,1,1]*3;
-[p0,x2] = forward_kin_tensegrity(@energy_sphere,robot);
+[p0,x2] = forward_kin_tensegrity(robot);
 filename = 'testAnimated.gif';
 plot3([0,0],[0,0],[0,0]);
 for k = 1:length(dp)
     p_task_2 = p0 + [dx(k)
-        dy(k)
-        dz(k)];
-    robot = inv_kin_tensegrity(p_task_2,@energy_sphere,robot);
-    [p,x2] = forward_kin_tensegrity(@energy_sphere,robot);
+               dy(k)
+               dz(k)];
+    robot = inv_kin_tensegrity(p_task_2,robot);
+    [p,x2] = forward_kin_tensegrity(robot);
     addpoints(h,p_task_2(1),p_task_2(2),p_task_2(3));
     plot3(p0(1) + dx, p0(2) + dy, p0(3) + dz);
     visualize(p,x2,robot)

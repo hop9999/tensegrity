@@ -1,4 +1,4 @@
-function [p,x] = forward_kin_tensegrity(energy_f,robot)
+function [p,x] = forward_kin_tensegrity(robot)
 
 %Structure robot
 %robot.k - array of spring stiffness 
@@ -11,7 +11,7 @@ function [p,x] = forward_kin_tensegrity(energy_f,robot)
 %robot.end_eff.rod - number of end effector rod
 %robot.end_eff.end - number of end of end effector rod
     options = optimoptions(@fmincon,'MaxIterations',60000,'MaxFunctionEvaluations',60000);
-    [x,fval] = fmincon(@(x)energy_f(x,robot),robot.x0,[],[],[],[],[],[],@(x)rod_constr(x,robot),options);
+    [x,fval] = fmincon(@(x)robot.energy_f(x,robot),robot.x0,[],[],[],[],[],[],@(x)rod_constr(x,robot),options);
     
     p = [x((robot.end_eff.rod - 3)*6 + 1)
          x((robot.end_eff.rod - 3)*6 + 2)

@@ -51,6 +51,8 @@ robot.base_1_2 = [0,0.2,0]';
 robot.base_2_1 = [0.2,0,0]';
 robot.base_2_2 = [0.2,0.2,0]';
 
+robot.energy_f = @energy_leg;
+
 dp = linspace(0,2*pi,41);
 dx = 0.05*sin(dp);
 dy = 0.05*cos(2*dp);
@@ -59,7 +61,7 @@ fig = figure;
 campos([-1,-1,1])
 h = animatedline;
 m = [1,1,1,1,1,1]*3;
-[p0,x2] = forward_kin_tensegrity(@energy_leg,robot);
+[p0,x2] = forward_kin_tensegrity(robot);
 robot.x0 = x2;
 filename = 'testAnimated.gif';
 plot3([0,0],[0,0],[0,0]);
@@ -68,9 +70,9 @@ for k = 1:length(dp)
         dy(k)
         dz(k)];
 
-    robot = inv_kin_tensegrity(p_task_2,@energy_leg,robot);
+    robot = inv_kin_tensegrity(p_task_2,robot);
     robot.x0 = x2;
-    [p,x2] = forward_kin_tensegrity(@energy_leg,robot);
+    [p,x2] = forward_kin_tensegrity(robot);
     addpoints(h,p_task_2(1),p_task_2(2),p_task_2(3));
     plot3(p0(1) + dx, p0(2) + dy, p0(3) + dz);
     visualize(p,x2,robot)

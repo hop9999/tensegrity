@@ -2,7 +2,7 @@ function [] = visualize(p,x,robot)
     hold on
     xlim([-1 1])
     ylim([-1 0.5])
-    zlim([0 1])
+    zlim([-0.5 1])
     campos('manual')
     campos([-1,-1,1])
     plot3(p(1),p(2),p(3),'r*')

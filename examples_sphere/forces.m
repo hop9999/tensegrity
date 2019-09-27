@@ -20,10 +20,10 @@ robot.base_1_1 = [0,0,0]';
 robot.base_1_2 = [0,0,1]';
 robot.base_2_1 = [0.4,0,0]';
 robot.base_2_2 = [0.4,0,1]';
-
-[p,x2] = forward_kin_tensegrity(@energy_sphere,robot);
+robot.energy_f = @energy_sphere;
+[p,x2] = forward_kin_tensegrity(robot);
 visualize(p,x2,robot)
 
 robot.f = [0;10;0]*10;
-[p,x2] = forward_kin_tensegrity(@energy_sphere,robot);
+[p,x2] = forward_kin_tensegrity(robot);
 visualize(p,x2,robot)

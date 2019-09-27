@@ -51,10 +51,12 @@ robot.base_1_2 = [0,0.2,0]';
 robot.base_2_1 = [0.2,0,0]';
 robot.base_2_2 = [0.2,0.2,0]';
 
-[p,x] = forward_kin_tensegrity(@energy_leg,robot);
+robot.energy_f = @energy_leg;
+
+[p,x] = forward_kin_tensegrity(robot);
 visualize(p,x,robot)
 
 robot.f = [0;10;0]*1;
-[p,x] = forward_kin_tensegrity(@energy_leg,robot);
+[p,x] = forward_kin_tensegrity(robot);
 visualize(p,x,robot)
 
