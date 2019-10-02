@@ -1,24 +1,30 @@
 function P = energy_sphere(q,robot)  
-    x = zeros(6,6);
-    g = 9.8;
-    x(1:3,1) = robot.base_1_1;
-
-    x(4:6,1) = robot.base_1_2; 
+    n_rods = length(q)/6;
+    n_base = length(robot.base)/6;
     
-    x(1:3,2) = robot.base_2_1;
+    x = zeros(6,n_rods + n_base);
+    g = 9.8;
 
-    x(4:6,2) = robot.base_2_2; 
+    for i = 1:n_base
+        x(1:3,i) = [ robot.base((i-1)*6 + 1)
+                     robot.base((i-1)*6 + 2)
+                     robot.base((i-1)*6 + 3) ];
+
+        x(4:6,i) = [ robot.base((i-1)*6 + 4)
+                     robot.base((i-1)*6 + 5)
+                     robot.base((i-1)*6 + 6) ];
+    end
     
     P_grav = 0;
-    for i = 3:6
-        x(1:3,i) = [ q((i-3)*6 + 1)
-                     q((i-3)*6 + 2)
-                     q((i-3)*6 + 3) ];
+    for i = n_base + 1:n_rods + n_base
+        x(1:3,i) = [ q((i-1-n_base)*6 + 1)
+                     q((i-1-n_base)*6 + 2)
+                     q((i-1-n_base)*6 + 3) ];
 
-        x(4:6,i) = [ q((i-3)*6 + 1) + q((i-3)*6 + 4)
-                     q((i-3)*6 + 2) + q((i-3)*6 + 5)
-                     q((i-3)*6 + 3) + q((i-3)*6 + 6) ];
-        P_grav = P_grav + robot.m(i)*g*(q((i-3)*6 + 3) +  q((i-3)*6 + 6)/2);
+        x(4:6,i) = [ q((i-1-n_base)*6 + 4)
+                     q((i-1-n_base)*6 + 5)
+                     q((i-1-n_base)*6 + 6) ];
+        P_grav = P_grav + robot.m(i)*g*(q((i-1-n_base)*6 + 3) +  q((i-1-n_base)*6 + 6))/2;
     end
     P_ext = transpose(robot.f)*x(1:3,4);
     P_elast = spring_energy(x,1,1,3,1,robot,1) + spring_energy(x,1,1,3,2,robot,2) + spring_energy(x,1,1,5,1,robot,3) + ...

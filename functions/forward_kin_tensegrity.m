@@ -13,12 +13,8 @@ function [p,x] = forward_kin_tensegrity(robot)
     options = optimoptions(@fmincon,'MaxIterations',60000,'MaxFunctionEvaluations',60000);
     [x,fval] = fmincon(@(x)robot.energy_f(x,robot),robot.x0,[],[],[],[],[],[],@(x)rod_constr(x,robot),options);
     
-    p = [x((robot.end_eff.rod - 3)*6 + 1)
-         x((robot.end_eff.rod - 3)*6 + 2)
-         x((robot.end_eff.rod - 3)*6 + 3)] + ...
-        [x((robot.end_eff.rod - 3)*6 + 4)
-         x((robot.end_eff.rod - 3)*6 + 5)
-         x((robot.end_eff.rod - 3)*6 + 6)]*...
-        (robot.end_eff.end - 1);
+    p = [x((robot.end_eff.rod - 3)*6 + (robot.end_eff.end - 1)*3 + 1)
+         x((robot.end_eff.rod - 3)*6 + (robot.end_eff.end - 1)*3 + 2)
+         x((robot.end_eff.rod - 3)*6 + (robot.end_eff.end - 1)*3 + 3)];
 
 end

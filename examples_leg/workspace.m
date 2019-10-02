@@ -53,10 +53,10 @@ for a1 = 0.05:d:0.3
                 robot.end_eff.rod = 7;
                 robot.end_eff.end = 1;
                 
-                robot.base_1_1 = [0,0,0]';
-                robot.base_1_2 = [0,0.2,0]';
-                robot.base_2_1 = [0.2,0,0]';
-                robot.base_2_2 = [0.2,0.2,0]';
+                robot.base = [0,0,0,...
+              0,0.2,0,...
+              0.2,0,0,...
+              0.2,0.2,0];
                 
                 robot.energy_f = @energy_leg;
                 
